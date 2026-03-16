@@ -64,21 +64,20 @@
     <script src="https://www.gstatic.com/firebasejs/10.0.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.0.0/firebase-auth-compat.js"></script>
 
-    <script>
+   <script>
         // --- AYARLAR ---
-        // 1. BURAYA APPS SCRIPT LİNKİNİ YAPIŞTIR:
-        const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbz--x-FoJyj6CHrYslINKgI917CclU-JyLPxk118ypQVxCxCatuUvtgdJ6dcmoSliiRxw/exec";
+        // Apps Script'ten aldığın EN YENİ linki buraya yapıştır
+        const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbweR9-QUVXVQy6FiGWItRhNhlHfWHDDgXrsy2JkcYN8nfnF01f_qGVgnaasom3bpF9BDw/exec";
 
-        // 2. FIREBASE BİLGİLERİN (Bunlar senin projenin sabit bilgileri):
-       const firebaseConfig = {
-  apiKey: "AIzaSyCBWeHWBQu4d8Ph_4ySlCpa-ex7fBr4dww",
-  authDomain: "project-add-78a10.firebaseapp.com",
-  projectId: "project-add-78a10",
-  storageBucket: "project-add-78a10.firebasestorage.app",
-  messagingSenderId: "195140034011",
-  appId: "1:195140034011:web:1e59e01f70064cff21dbfe",
-  measurementId: "G-HZPJ0MVBYX"
-};
+        const firebaseConfig = {
+            apiKey: "AIzaSyCBWeHWBQu4d8Ph_4ySlCpa-ex7fBr4dww",
+            authDomain: "project-add-78a10.firebaseapp.com",
+            projectId: "project-add-78a10",
+            storageBucket: "project-add-78a10.firebasestorage.app",
+            messagingSenderId: "195140034011",
+            appId: "1:195140034011:web:1e59e01f70064cff21dbfe",
+            measurementId: "G-HZPJ0MVBYX"
+        };
         firebase.initializeApp(firebaseConfig);
 
         // OTURUM TAKİBİ
@@ -95,6 +94,8 @@
             }
         });
 
+        // Giriş, Çıkış, Yükleme ve Listeleme fonksiyonları aşağıda aynen devam etsin...
+        // Sadece yanlışlıkla araya giren "function doGet" kısmını sildiğinden emin ol.
         function loginWithGoogle() {
             const provider = new firebase.auth.GoogleAuthProvider();
             // popup çalışmazsa redirect deneyebilirsin: signInWithRedirect
@@ -128,6 +129,21 @@
             };
             reader.readAsDataURL(file);
         }
+        function doGet(e) {
+  var userEmail = e.parameter.userEmail;
+  var mainFolder = DriveApp.getFolderById(MAIN_FOLDER_ID);
+  
+  // SADECE BU MAİL ADMİN OLSUN (Senin yeni mailini yaz)
+  var ADMIN_EMAIL = "YENI_EPOSTAN@gmail.com"; 
+
+  if (userEmail === ADMIN_EMAIL) {
+    // Admin ise her şeyi göster (Tüm klasörleri tara)
+    // ... (mevcut listeleme kodun)
+  } else {
+    // Normal kullanıcı ise sadece kendi klasörünü görsün
+    // ...
+  }
+}
 
         function loadFiles() {
             const user = firebase.auth().currentUser;
