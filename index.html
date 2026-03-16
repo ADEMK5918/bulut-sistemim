@@ -1,73 +1,99 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-    <title>Bulut Depom</title>
+    <title>Bulut Depom - Pro</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
-        body { font-family: 'Segoe UI', sans-serif; background: #0f172a; color: #f8fafc; display: flex; flex-direction: column; align-items: center; padding: 20px; margin: 0; min-height: 100vh; }
-        .card { background: #1e293b; padding: 25px; border-radius: 16px; width: 100%; max-width: 420px; text-align: center; margin-bottom: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.3); border: 1px solid #334155; }
-        h2 { color: #38bdf8; margin-bottom: 20px; }
-        .btn-google { background: white; color: #444; border: none; padding: 12px; cursor: pointer; width: 95%; border-radius: 8px; font-weight: bold; display: flex; align-items: center; justify-content: center; gap: 10px; transition: 0.2s; margin: 0 auto; }
-        .btn-google:hover { background: #f1f5f9; transform: translateY(-1px); }
+        :root { --primary: #38bdf8; --bg: #0f172a; --card: #1e293b; --text: #f8fafc; --accent: #334155; }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); display: flex; flex-direction: column; align-items: center; padding: 20px; margin: 0; min-height: 100vh; }
+        
+        .card { background: var(--card); padding: 25px; border-radius: 16px; width: 100%; max-width: 450px; text-align: center; margin-bottom: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.3); border: 1px solid var(--accent); }
+        h2 { color: var(--primary); margin-bottom: 20px; letter-spacing: 1px; }
+
+        /* Admin Paneli Rozetleri */
+        .admin-dashboard { display: none; gap: 10px; justify-content: center; margin-bottom: 15px; flex-wrap: wrap; }
+        .stat-badge { background: var(--accent); color: var(--primary); padding: 6px 12px; border-radius: 20px; font-size: 12px; border: 1px solid var(--primary); font-weight: bold; }
+
+        /* Sürükle Bırak Alanı */
+        .drop-zone { border: 2px dashed var(--primary); padding: 35px 20px; border-radius: 12px; cursor: pointer; transition: 0.3s; margin: 15px 0; background: rgba(56, 189, 248, 0.03); position: relative; }
+        .drop-zone:hover, .drop-zone.over { background: rgba(56, 189, 248, 0.1); border-color: white; }
+        .drop-zone p { margin: 0; font-size: 14px; color: #94a3b8; }
+
+        .btn-google { background: white; color: #444; border: none; padding: 12px; cursor: pointer; width: 100%; border-radius: 8px; font-weight: bold; display: flex; align-items: center; justify-content: center; gap: 10px; transition: 0.2s; }
         .btn-google img { width: 20px; }
-        button.primary { background: #38bdf8; color: #0f172a; border: none; padding: 12px; cursor: pointer; width: 95%; border-radius: 8px; font-weight: bold; margin-top: 10px; }
-        .btn-logout { background: transparent; color: #94a3b8; border: 1px solid #334155; padding: 6px 15px; font-size: 13px; margin-top: 15px; border-radius: 6px; cursor: pointer; }
-        .btn-delete { background: #ef4444; color: white; width: auto; padding: 4px 10px; font-size: 12px; border: none; border-radius: 4px; cursor: pointer; }
-        #mainContent { display: none; width: 100%; max-width: 500px; }
-        .file-item { background: #334155; margin: 10px 0; padding: 12px; border-radius: 10px; display: flex; justify-content: space-between; align-items: center; border-left: 5px solid #38bdf8; }
-        .file-link { color: #38bdf8; text-decoration: none; font-weight: bold; font-size: 14px; margin-right: 10px; }
-        #status { color: #22c55e; font-size: 14px; margin-top: 10px; min-height: 20px; }
-        .user-info { font-size: 14px; color: #94a3b8; margin-bottom: 15px; display: flex; align-items: center; justify-content: center; gap: 10px; }
-        .user-photo { width: 32px; border-radius: 50%; border: 2px solid #38bdf8; }
-        footer { margin-top: auto; padding: 20px; text-align: center; color: #64748b; font-size: 13px; width: 100%; }
-        .footer-line { height: 1px; background: linear-gradient(to right, transparent, #334155, transparent); margin-bottom: 10px; width: 80%; margin: 0 auto 10px; }
-        .ak-logo { color: #38bdf8; font-weight: bold; letter-spacing: 2px; display: block; margin-top: 5px; }
+        
+        #status { color: var(--primary); font-size: 13px; margin: 10px 0; min-height: 18px; font-weight: 500; }
+        
+        /* Dosya Listesi Tasarımı */
+        .file-item { background: var(--accent); margin: 8px 0; padding: 12px; border-radius: 10px; display: flex; justify-content: space-between; align-items: center; border-left: 4px solid var(--primary); transition: 0.2s; }
+        .file-info { display: flex; flex-direction: column; align-items: flex-start; gap: 4px; }
+        .file-name { font-size: 14px; font-weight: 600; color: var(--text); word-break: break-all; text-align: left; }
+        .file-meta { font-size: 11px; color: #94a3b8; }
+        
+        .actions { display: flex; gap: 8px; }
+        .btn-open { color: var(--primary); text-decoration: none; font-weight: bold; font-size: 13px; padding: 5px 10px; }
+        .btn-delete { background: #ef4444; color: white; border: none; padding: 5px 12px; border-radius: 6px; cursor: pointer; font-size: 11px; font-weight: bold; }
+
+        .user-info { display: flex; align-items: center; justify-content: center; gap: 12px; margin-bottom: 20px; }
+        .user-photo { width: 35px; height: 35px; border-radius: 50%; border: 2px solid var(--primary); }
+        .btn-logout { background: transparent; color: #94a3b8; border: 1px solid var(--accent); padding: 8px 16px; font-size: 13px; border-radius: 8px; cursor: pointer; margin-top: 10px; transition: 0.2s; }
+        .btn-logout:hover { color: white; border-color: #64748b; }
+
+        #mainContent { display: none; width: 100%; max-width: 480px; }
+        footer { margin-top: auto; padding: 25px; text-align: center; color: #64748b; font-size: 12px; }
+        .ak-logo { color: var(--primary); font-weight: bold; letter-spacing: 2px; display: block; margin-top: 8px; }
     </style>
 </head>
 <body>
 
     <div class="card" id="authSection">
-        <h2>Bulut Depo</h2>
-        <p style="color: #94a3b8; font-size: 14px; margin-bottom: 20px;">Lütfen Google hesabınla giriş yap.</p>
+        <h2>Bulut Depo PRO</h2>
+        <p style="color: #94a3b8; font-size: 14px; margin-bottom: 25px;">Kişisel güvenli depolama alanı.</p>
         <button class="btn-google" onclick="loginWithGoogle()">
-            <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google">
+            <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="G">
             Google ile Giriş Yap
         </button>
     </div>
 
     <div id="mainContent">
         <div class="card">
+            <div id="adminPanel" class="admin-dashboard">
+                <span class="stat-badge" id="statUsers">👥 Kullanıcı: 0</span>
+                <span class="stat-badge" id="statFiles">📁 Toplam: 0</span>
+            </div>
+
             <div class="user-info">
                 <img id="userPhoto" class="user-photo" src="" alt="">
-                <span id="welcomeUser"></span>
+                <span id="welcomeUser" style="font-weight: 500;"></span>
             </div>
-            <input type="file" id="fileInput" style="color: white; margin: 15px 0;">
-            <button class="primary" onclick="uploadFile()">Drive'a Yükle</button>
+
+            <div class="drop-zone" id="dropZone">
+                <p id="dropText">📁 Dosyaları buraya sürükle veya tıkla</p>
+                <input type="file" id="fileInput" style="display: none;">
+            </div>
+            
             <div id="status"></div>
             <button onclick="logout()" class="btn-logout">Oturumu Kapat</button>
         </div>
 
-        <div class="card">
-            <h3>Dosyalarım</h3>
+        <div class="card" style="max-width: 100%;">
+            <h3 style="margin-top: 0; font-size: 18px; color: var(--primary);">Dosyalarım</h3>
             <div id="fileList"></div>
-            <button onclick="loadFiles()" style="background:#6366f1; color:white; border:none; padding:10px; border-radius:8px; cursor:pointer; width:95%; margin-top:15px; font-weight:bold;">Listeyi Yenile</button>
+            <button onclick="loadFiles()" style="background:#6366f1; color:white; border:none; padding:12px; border-radius:8px; cursor:pointer; width:100%; margin-top:15px; font-weight:bold; transition: 0.2s;">Listeyi Yenile</button>
         </div>
     </div>
 
     <footer>
-        <div class="footer-line"></div>
-        <p>© 2026 Tüm Hakları Saklıdır</p>
-        <span class="ak-logo">A.K</span>
+        <p>© 2026 Akıllı Bulut Sistemi</p>
+        <span class="ak-logo">ADEM KAYA</span>
     </footer>
 
     <script src="https://www.gstatic.com/firebasejs/10.0.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.0.0/firebase-auth-compat.js"></script>
 
-   <script>
-        // --- AYARLAR ---
-        // Apps Script'ten aldığın EN YENİ linki buraya yapıştır
-        const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwZUJ-C3M4eMXUss-Qg8mwGhsg0ayK60uJ3woGbAFLshv5JfHKEkqo9IACFIddMn1KFgg/exec";
+    <script>
+        const WEB_APP_URL = "https://script.google.com/macros/s/AKfycby00ZGTDMbfZPD4XaUcjTwmwksPMMgvnCWBzjsYMbMCU3r03jlu10YiWla7XpsmSXdLYg/exec";
 
         const firebaseConfig = {
             apiKey: "AIzaSyCBWeHWBQu4d8Ph_4ySlCpa-ex7fBr4dww",
@@ -80,13 +106,12 @@
         };
         firebase.initializeApp(firebaseConfig);
 
-        // OTURUM TAKİBİ
         firebase.auth().onAuthStateChanged((user) => {
             if (user) {
                 document.getElementById('authSection').style.display = 'none';
                 document.getElementById('mainContent').style.display = 'block';
-                document.getElementById('welcomeUser').innerText = user.email;
-                document.getElementById('userPhoto').src = user.photoURL || 'https://via.placeholder.com/32';
+                document.getElementById('welcomeUser').innerText = user.email.split('@')[0];
+                document.getElementById('userPhoto').src = user.photoURL || '';
                 loadFiles();
             } else {
                 document.getElementById('authSection').style.display = 'block';
@@ -94,73 +119,72 @@
             }
         });
 
-        // Giriş, Çıkış, Yükleme ve Listeleme fonksiyonları aşağıda aynen devam etsin...
-        // Sadece yanlışlıkla araya giren "function doGet" kısmını sildiğinden emin ol.
-        function loginWithGoogle() {
-            const provider = new firebase.auth.GoogleAuthProvider();
-            // popup çalışmazsa redirect deneyebilirsin: signInWithRedirect
-            firebase.auth().signInWithPopup(provider).catch(err => alert("Hata: " + err.message));
-        }
+        // Sürükle Bırak Mantığı
+        const dropZone = document.getElementById('dropZone');
+        const fileInput = document.getElementById('fileInput');
 
-        function logout() {
-            if(confirm("Çıkış yapıyorsun?")) firebase.auth().signOut();
-        }
+        dropZone.onclick = () => fileInput.click();
+        dropZone.ondragover = (e) => { e.preventDefault(); dropZone.classList.add('over'); };
+        dropZone.ondragleave = () => dropZone.classList.remove('over');
+        dropZone.ondrop = (e) => {
+            e.preventDefault();
+            dropZone.classList.remove('over');
+            fileInput.files = e.dataTransfer.files;
+            uploadFile();
+        };
 
         function uploadFile() {
-            const fileInput = document.getElementById('fileInput');
             const file = fileInput.files[0];
             const user = firebase.auth().currentUser;
             const status = document.getElementById('status');
-            if (!file) return alert("Dosya seç!");
+            if (!file) return;
 
             status.innerText = "⏳ Yükleniyor...";
             const reader = new FileReader();
             reader.onload = function(e) {
                 const base64 = e.target.result.split(',')[1];
-                const data = { action:"upload", fileName: file.name, mimeType: file.type, base64: base64, userEmail: user.email };
-                fetch(WEB_APP_URL, { method: "POST", body: JSON.stringify(data) })
+                fetch(WEB_APP_URL, {
+                    method: "POST",
+                    body: JSON.stringify({ action: "upload", fileName: file.name, mimeType: file.type, base64: base64, userEmail: user.email })
+                })
                 .then(res => res.json())
-                .then(() => { 
-                    status.innerText = "✅ Başarıyla Yüklendi!"; 
+                .then(() => {
+                    status.innerText = "✅ Başarıyla Yüklendi!";
                     fileInput.value = "";
                     setTimeout(() => status.innerText = "", 3000);
-                    loadFiles(); 
+                    loadFiles();
                 });
             };
             reader.readAsDataURL(file);
         }
-        function doGet(e) {
-  var userEmail = e.parameter.userEmail;
-  var mainFolder = DriveApp.getFolderById(MAIN_FOLDER_ID);
-  
-  // SADECE BU MAİL ADMİN OLSUN (Senin yeni mailini yaz)
-  var ADMIN_EMAIL = "YENI_EPOSTAN@gmail.com"; 
-
-  if (userEmail === ADMIN_EMAIL) {
-    // Admin ise her şeyi göster (Tüm klasörleri tara)
-    // ... (mevcut listeleme kodun)
-  } else {
-    // Normal kullanıcı ise sadece kendi klasörünü görsün
-    // ...
-  }
-}
 
         function loadFiles() {
             const user = firebase.auth().currentUser;
             const listDiv = document.getElementById('fileList');
-            listDiv.innerHTML = "<p style='color:#94a3b8'>Dosyalar listeleniyor...</p>";
+            listDiv.innerHTML = "<p style='color:#94a3b8'>Yükleniyor...</p>";
 
             fetch(WEB_APP_URL + "?userEmail=" + user.email)
             .then(res => res.json())
-            .then(files => {
+            .then(data => {
                 listDiv.innerHTML = "";
-                if(files.length === 0) listDiv.innerHTML = "<p style='color:#94a3b8'>Henüz dosya yok.</p>";
-                files.forEach(f => {
+                
+                // Admin Paneli Kontrolü
+                if(data.isAdmin) {
+                    document.getElementById('adminPanel').style.display = 'flex';
+                    document.getElementById('statUsers').innerText = "👥 Kullanıcı: " + data.stats.totalUsers;
+                    document.getElementById('statFiles').innerText = "📁 Toplam: " + data.stats.totalFiles;
+                }
+
+                if(data.files.length === 0) listDiv.innerHTML = "<p style='color:#94a3b8'>Dosya bulunamadı.</p>";
+                data.files.forEach(f => {
                     listDiv.innerHTML += `
                         <div class="file-item">
-                            <span>${f.name}</span>
-                            <div>
-                                <a href="${f.url}" target="_blank" class="file-link">AÇ</a>
+                            <div class="file-info">
+                                <span class="file-name">${f.name}</span>
+                                <span class="file-meta">${f.size || '0 MB'}</span>
+                            </div>
+                            <div class="actions">
+                                <a href="${f.url}" target="_blank" class="btn-open">AÇ</a>
                                 <button class="btn-delete" onclick="deleteFile('${f.id}')">SİL</button>
                             </div>
                         </div>`;
@@ -168,11 +192,19 @@
             });
         }
 
-        function deleteFile(fileId) {
-            if(!confirm("Bu dosya kalıcı olarak silinecek?")) return;
-            fetch(WEB_APP_URL, { method: "POST", body: JSON.stringify({ action: "delete", fileId: fileId }) })
+        function deleteFile(id) {
+            if(!confirm("Emin misin?")) return;
+            const user = firebase.auth().currentUser;
+            fetch(WEB_APP_URL, { method: "POST", body: JSON.stringify({ action: "delete", fileId: id, userEmail: user.email }) })
             .then(() => loadFiles());
         }
+
+        function loginWithGoogle() {
+            const provider = new firebase.auth.GoogleAuthProvider();
+            firebase.auth().signInWithPopup(provider).catch(alert);
+        }
+
+        function logout() { firebase.auth().signOut(); }
     </script>
 </body>
 </html>
