@@ -1,138 +1,117 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-    <title>AK-Depo | Yönetim Merkezi</title>
+    <title> Bulut Depo </title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
-        :root { --primary: #38bdf8; --bg: #0f172a; --card: #1e293b; --text: #f8fafc; --accent: #334155; --danger: #ef4444; --warning: #f59e0b; }
+        :root { --primary: #38bdf8; --bg: #0f172a; --card: #1e293b; --text: #f8fafc; --accent: #334155; --danger: #ef4444; }
         * { box-sizing: border-box; transition: all 0.2s ease; }
         body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); margin: 0; min-height: 100vh; display: flex; flex-direction: column; align-items: center; }
 
-        /* Modern Giriş Ekranı (Glassmorphism) */
-        .auth-container { margin-top: 10vh; width: 100%; max-width: 400px; padding: 40px; background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(12px); border-radius: 24px; border: 1px solid rgba(56, 189, 248, 0.2); text-align: center; box-shadow: 0 20px 50px rgba(0,0,0,0.5); }
-        .auth-container h1 { color: var(--primary); font-size: 28px; margin-bottom: 10px; letter-spacing: -1px; }
-        .btn-google { background: white; color: #1e293b; border: none; padding: 14px; cursor: pointer; width: 100%; border-radius: 12px; font-weight: bold; display: flex; align-items: center; justify-content: center; gap: 12px; font-size: 16px; margin-top: 20px; }
-        .btn-google:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(255,255,255,0.1); }
+        /* Modern Giriş Alanı */
+        .login-box { margin-top: 15vh; width: 90%; max-width: 400px; padding: 40px; background: var(--card); border-radius: 20px; border: 1px solid var(--accent); text-align: center; box-shadow: 0 20px 40px rgba(0,0,0,0.4); }
+        .btn-google { background: white; color: #1e293b; border: none; padding: 14px; cursor: pointer; width: 100%; border-radius: 10px; font-weight: bold; display: flex; align-items: center; justify-content: center; gap: 10px; margin-top: 20px; }
 
-        /* Büyük Admin Paneli Layout */
-        #adminDashboard { display: none; width: 100%; max-width: 1300px; padding: 30px; grid-template-columns: 260px 1fr; gap: 30px; }
-        .sidebar { background: var(--card); border-radius: 20px; padding: 25px; border: 1px solid var(--accent); height: fit-content; }
-        .sidebar h3 { color: var(--primary); margin-top: 0; font-size: 18px; border-bottom: 1px solid var(--accent); padding-bottom: 10px; }
-        .nav-btn { background: transparent; color: #94a3b8; border: none; width: 100%; text-align: left; padding: 12px 15px; border-radius: 10px; cursor: pointer; font-size: 15px; margin-bottom: 5px; }
-        .nav-btn:hover, .nav-btn.active { background: var(--accent); color: var(--primary); }
+        /* Admin Paneli Layout */
+        #adminDashboard { display: none; width: 100%; max-width: 1200px; padding: 20px; grid-template-columns: 240px 1fr; gap: 20px; }
+        .sidebar { background: var(--card); border-radius: 15px; padding: 20px; border: 1px solid var(--accent); height: fit-content; }
+        .main-view { background: var(--card); border-radius: 15px; padding: 25px; border: 1px solid var(--accent); }
 
-        /* İçerik Alanı */
-        .main-content { background: var(--card); border-radius: 20px; padding: 30px; border: 1px solid var(--accent); min-height: 600px; }
-        .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-bottom: 30px; }
-        .stat-box { background: var(--bg); padding: 20px; border-radius: 15px; border-left: 4px solid var(--primary); }
-        .stat-box small { color: #94a3b8; font-size: 12px; text-transform: uppercase; }
-        .stat-box p { margin: 5px 0 0; font-size: 24px; font-weight: bold; }
+        /* İstatistik Kartları */
+        .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom: 25px; }
+        .stat-card { background: var(--bg); padding: 15px; border-radius: 10px; border-top: 3px solid var(--primary); }
+        .stat-card small { color: #94a3b8; font-size: 11px; }
+        .stat-card p { margin: 5px 0 0; font-size: 20px; font-weight: bold; }
 
-        /* Tablo ve Listeler */
-        .data-table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-        .data-table th { text-align: left; padding: 15px; border-bottom: 2px solid var(--accent); color: var(--primary); font-size: 14px; }
-        .data-table td { padding: 15px; border-bottom: 1px solid var(--accent); font-size: 14px; }
-        .search-input { width: 100%; padding: 12px 20px; border-radius: 12px; border: 1px solid var(--accent); background: var(--bg); color: white; margin-bottom: 20px; }
+        /* Navigasyon */
+        .nav-link { background: transparent; color: #94a3b8; border: none; width: 100%; text-align: left; padding: 12px; border-radius: 8px; cursor: pointer; margin-bottom: 5px; }
+        .nav-link.active, .nav-link:hover { background: var(--accent); color: var(--primary); }
 
-        /* Kullanıcı Görünümü (Normal User) */
-        #userView { display: none; width: 100%; max-width: 500px; padding: 20px; }
-        .drop-zone { border: 2px dashed var(--primary); padding: 40px; border-radius: 20px; cursor: pointer; text-align: center; background: rgba(56, 189, 248, 0.05); margin-bottom: 20px; }
-        .drop-zone.over { background: rgba(56, 189, 248, 0.15); }
+        /* Dosya ve Kullanıcı Listesi */
+        .data-table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        .data-table th { text-align: left; padding: 12px; color: var(--primary); border-bottom: 2px solid var(--accent); }
+        .data-table td { padding: 12px; border-bottom: 1px solid var(--accent); font-size: 14px; }
 
-        .btn-action { padding: 6px 12px; border-radius: 8px; border: none; cursor: pointer; font-size: 12px; font-weight: bold; }
-        .btn-del { background: var(--danger); color: white; }
-        .btn-block { background: var(--warning); color: white; }
-        
-        footer { margin-top: auto; padding: 40px; text-align: center; color: #64748b; font-size: 13px; }
-        .ak-badge { color: var(--primary); font-weight: bold; letter-spacing: 3px; }
+        /* Kullanıcı Ekranı */
+        #userView { display: none; width: 90%; max-width: 500px; padding: 20px; }
+        .drop-zone { border: 2px dashed var(--primary); padding: 40px; border-radius: 15px; text-align: center; background: rgba(56, 189, 248, 0.05); cursor: pointer; margin-bottom: 20px; }
+
+        .btn-action { padding: 5px 10px; border-radius: 5px; border: none; cursor: pointer; font-size: 11px; font-weight: bold; }
+        footer { margin-top: auto; padding: 30px; color: #64748b; font-size: 12px; }
     </style>
 </head>
 <body>
 
-    <div id="authSection" class="auth-container">
-        <h1>AK-Depo PRO</h1>
-        <p style="color: #94a3b8;">Yönetim ve Depolama Paneli</p>
+    <div id="authSection" class="login-box">
+        <h2 style="color:var(--primary)">Bulut Depo PRO</h2>
+        <p style="color:#94a3b8">Dosyalarınızı Güvenle Depolayın</p>
         <button class="btn-google" onclick="loginWithGoogle()">
-            <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" width="20">
+            <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" width="18">
             Google ile Giriş Yap
         </button>
     </div>
 
     <div id="adminDashboard">
         <aside class="sidebar">
-            <h3>Yönetim Menüsü</h3>
-            <button class="nav-btn active" onclick="switchTab('stats')">📊 Genel Durum</button>
-            <button class="nav-btn" onclick="switchTab('users')">👥 Kullanıcı Yönetimi</button>
-            <button class="nav-btn" onclick="switchTab('files')">📂 Tüm Dosyalar</button>
-            <div style="margin-top: 50px; border-top: 1px solid var(--accent); padding-top: 20px;">
-                <button class="nav-btn" onclick="logout()" style="color: var(--danger);">🚪 Oturumu Kapat</button>
-            </div>
+            <h3 style="font-size:16px; margin-bottom:20px; color:var(--primary)">ADMİN PANELİ</h3>
+            <button class="nav-link active" onclick="showTab('stats')">📊 Özet</button>
+            <button class="nav-link" onclick="showTab('users')">👥 Kullanıcılar</button>
+            <button class="nav-link" onclick="showTab('files')">📂 Tüm Dosyalar</button>
+            <button class="nav-link" onclick="logout()" style="color:var(--danger); margin-top:30px">🚪 Çıkış</button>
         </aside>
 
-        <main class="main-content">
+        <main class="main-view">
             <div id="tab-stats">
-                <h2>Sistem Özeti</h2>
                 <div class="stats-grid">
-                    <div class="stat-box"><small>Kullanıcılar</small><p id="countUsers">0</p></div>
-                    <div class="stat-box"><small>Toplam Dosya</small><p id="countFiles">0</p></div>
-                    <div class="stat-box"><small>Kullanılan Alan</small><p id="totalSize">0 MB</p></div>
+                    <div class="stat-card"><small>KULLANICI</small><p id="sUsers">0</p></div>
+                    <div class="stat-card"><small>DOSYA</small><p id="sFiles">0</p></div>
+                    <div class="stat-card"><small>ALAN</small><p id="sSize">0 MB</p></div>
+                </div>
+                <h4 style="color:var(--primary)">Son Hareketler (Canlı Log)</h4>
+                <div id="liveLogs" style="font-size:12px; color:#94a3b8; background:var(--bg); padding:10px; border-radius:8px; max-height:200px; overflow-y:auto">
+                    Loglar bekleniyor...
                 </div>
             </div>
 
-            <div id="tab-users" style="display:none;">
-                <h2>Kullanıcı Listesi</h2>
+            <div id="tab-users" style="display:none">
+                <h4>Kullanıcı Yönetimi</h4>
                 <table class="data-table">
-                    <thead>
-                        <tr><th>Kullanıcı E-Posta</th><th>Dosya Sayısı</th><th>Alan</th><th>İşlem</th></tr>
-                    </thead>
-                    <tbody id="userListBody"></tbody>
+                    <thead><tr><th>E-Posta</th><th>Dosya</th><th>İşlem</th></tr></thead>
+                    <tbody id="userList"></tbody>
                 </table>
             </div>
 
-            <div id="tab-files" style="display:none;">
-                <h2>Dosya Arşivi</h2>
-                <input type="text" class="search-input" placeholder="Dosya veya sahibi ara..." onkeyup="filterFiles(this.value)">
+            <div id="tab-files" style="display:none">
+                <input type="text" placeholder="Dosya veya kullanıcı ara..." style="width:100%; padding:10px; background:var(--bg); border:1px solid var(--accent); color:white; border-radius:8px" onkeyup="searchFiles(this.value)">
                 <table class="data-table">
-                    <thead>
-                        <tr><th>Sahibi</th><th>Dosya Adı</th><th>Boyut</th><th>İşlem</th></tr>
-                    </thead>
-                    <tbody id="adminFileListBody"></tbody>
+                    <thead><tr><th>Sahibi</th><th>Dosya</th><th>Boyut</th><th>İşlem</th></tr></thead>
+                    <tbody id="allFilesList"></tbody>
                 </table>
             </div>
         </main>
     </div>
 
     <div id="userView">
-        <div class="card" style="background: var(--card); padding: 30px; border-radius: 20px; border: 1px solid var(--accent);">
-            <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 25px;">
-                <img id="uPhoto" src="" style="width: 45px; border-radius: 50%; border: 2px solid var(--primary);">
-                <div style="text-align: left;"><b id="uName"></b><br><small style="color:#94a3b8">Kullanıcı Paneli</small></div>
-            </div>
-
-            <div class="drop-zone" id="dropZone">
-                <p id="dropText">📁 Dosyaları buraya bırak veya tıkla</p>
-                <input type="file" id="fileInput" style="display: none;">
-            </div>
-            <div id="status" style="margin-bottom: 15px; font-weight: bold; color: var(--primary);"></div>
-            <button onclick="logout()" class="nav-btn" style="text-align: center; border: 1px solid var(--accent);">Oturumu Kapat</button>
+        <div class="main-view">
+            <h3 id="uEmail" style="margin-top:0; font-size:16px"></h3>
+            <div class="drop-zone" id="dropZone">📁 Dosyayı Buraya Bırak</div>
+            <div id="status" style="text-align:center; font-weight:bold; color:var(--primary)"></div>
+            <button class="nav-link" onclick="logout()" style="text-align:center; border:1px solid var(--accent)">Oturumu Kapat</button>
         </div>
-
-        <h3 style="margin-top: 30px; color: var(--primary);">Dosyalarım</h3>
+        <h4 style="margin-top:20px; color:var(--primary)">Dosyalarım</h4>
         <div id="userFileList"></div>
     </div>
 
-    <footer>
-        <p>© 2026 AK-Depo Bulut Sistemleri</p>
-        <span class="ak-badge">ADEM KAYA</span>
-    </footer>
+    <footer>© 2026 BULUT DEPO PRO - A.K</footer>
 
     <script src="https://www.gstatic.com/firebasejs/10.0.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.0.0/firebase-auth-compat.js"></script>
 
     <script>
-        const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwxDZ5gA_yIap_Tmaf0JXzCyvwDwZEV4_26dFobaPU7e-KFyx2TE4wweWrfv-KQG7Y-Vw/exec";
-
+        const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbx_1jHH1hi-oO_r6N3qhp-DnMFXCfxOoPhmiTTLH4TZj2H_lYe-LqGdD441tnj3SGFoew/exec";
+        
+        // Firebase Yapılandırman...
         const firebaseConfig = {
             apiKey: "AIzaSyCBWeHWBQu4d8Ph_4ySlCpa-ex7fBr4dww",
             authDomain: "project-add-78a10.firebaseapp.com",
@@ -144,10 +123,20 @@
         };
         firebase.initializeApp(firebaseConfig);
 
-        firebase.auth().onAuthStateChanged((user) => {
+        // LOG TAKİPÇİSİ
+        function logAction(action, detail) {
+            const user = firebase.auth().currentUser;
+            fetch(WEB_APP_URL, {
+                method: "POST",
+                body: JSON.stringify({ action: action, detail: detail, userEmail: user ? user.email : "Bilinmeyen" })
+            });
+        }
+
+        firebase.auth().onAuthStateChanged(user => {
             if (user) {
                 document.getElementById('authSection').style.display = 'none';
-                initDashboard(user);
+                logAction("GIRIS_YAPILDI", "Kullanıcı sisteme girdi.");
+                loadDashboard(user);
             } else {
                 document.getElementById('authSection').style.display = 'block';
                 document.getElementById('adminDashboard').style.display = 'none';
@@ -155,137 +144,55 @@
             }
         });
 
-        function initDashboard(user) {
+        function loadDashboard(user) {
             fetch(WEB_APP_URL + "?userEmail=" + user.email)
             .then(res => res.json())
             .then(data => {
-                if(data.isBlocked) {
-                    alert("Erişiminiz Engellendi!");
-                    logout();
-                    return;
-                }
-                
                 if(data.isAdmin) {
                     document.getElementById('adminDashboard').style.display = 'grid';
                     renderAdmin(data);
                 } else {
                     document.getElementById('userView').style.display = 'block';
-                    renderUser(user, data.files);
+                    document.getElementById('uEmail').innerText = user.email;
+                    renderUserFiles(data.files);
                 }
             });
         }
 
         function renderAdmin(data) {
-            document.getElementById('countUsers').innerText = data.stats.totalUsers;
-            document.getElementById('countFiles').innerText = data.stats.totalFiles;
-            document.getElementById('totalSize').innerText = (data.stats.totalSize / 1024 / 1024).toFixed(2) + " MB";
+            document.getElementById('sUsers').innerText = data.stats.totalUsers;
+            document.getElementById('sFiles').innerText = data.stats.totalFiles;
+            document.getElementById('sSize').innerText = (data.stats.totalSize / 1024 / 1024).toFixed(2) + " MB";
             
-            // Kullanıcı Listesi
-            const uBody = document.getElementById('userListBody');
-            uBody.innerHTML = data.users.map(u => `
-                <tr>
-                    <td>${u.name}</td>
-                    <td>${u.fileCount}</td>
-                    <td>${u.size}</td>
-                    <td><button class="btn-action btn-block" onclick="blockUser('${u.name}')">ENGELLE</button></td>
-                </tr>
+            document.getElementById('userList').innerHTML = data.users.map(u => `
+                <tr><td>${u.name}</td><td>${u.fileCount}</td><td><button class="btn-action" style="background:var(--warning)" onclick="logAction('ENGELLEME_TIKLANDI','${u.name}')">ENGELLE</button></td></tr>
             `).join('');
 
-            // Dosya Listesi
-            window.masterFiles = data.files; // Arama için sakla
+            window.masterFiles = data.files;
             renderAdminFiles(data.files);
         }
 
         function renderAdminFiles(files) {
-            document.getElementById('adminFileListBody').innerHTML = files.map(f => `
-                <tr>
-                    <td><small>${f.owner}</small></td>
-                    <td><b>${f.name}</b></td>
-                    <td>${f.size}</td>
-                    <td>
-                        <a href="${f.url}" target="_blank" style="color:var(--primary);text-decoration:none;margin-right:10px">AÇ</a>
-                        <button class="btn-action btn-del" onclick="deleteFile('${f.id}')">SİL</button>
-                    </td>
-                </tr>
+            document.getElementById('allFilesList').innerHTML = files.map(f => `
+                <tr><td><small>${f.owner}</small></td><td>${f.name}</td><td>${f.size}</td><td><a href="${f.url}" target="_blank" onclick="logAction('ADMIN_DOSYA_ACTI','${f.name}')">AÇ</a></td></tr>
             `).join('');
         }
 
-        function filterFiles(val) {
-            const filtered = window.masterFiles.filter(f => f.name.toLowerCase().includes(val.toLowerCase()) || f.owner.toLowerCase().includes(val.toLowerCase()));
-            renderAdminFiles(filtered);
-        }
-
-        function renderUser(user, files) {
-            document.getElementById('uName').innerText = user.email;
-            document.getElementById('uPhoto').src = user.photoURL;
-            document.getElementById('userFileList').innerHTML = files.map(f => `
-                <div style="background:var(--card);padding:15px;border-radius:12px;margin-bottom:10px;display:flex;justify-content:space-between;align-items:center;border-left:4px solid var(--primary)">
-                    <span>${f.name} <br> <small style="color:#64748b">${f.size}</small></span>
-                    <div>
-                        <a href="${f.url}" target="_blank" style="color:var(--primary);text-decoration:none;margin-right:15px;font-weight:bold">AÇ</a>
-                        <button class="btn-action btn-del" onclick="deleteFile('${f.id}')">SİL</button>
-                    </div>
-                </div>
-            `).join('');
-        }
-
-        function switchTab(tab) {
+        function showTab(tab) {
             document.querySelectorAll('[id^="tab-"]').forEach(t => t.style.display = 'none');
             document.getElementById('tab-' + tab).style.display = 'block';
-            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-            event.target.classList.add('active');
+            logAction("SEKME_DEGISTI", tab + " sekmesine bakıyor.");
         }
 
-        // Sürükle Bırak İşlemleri
+        function logout() { 
+            logAction("CIKIS_YAPTI", "Oturum kapatıldı.");
+            firebase.auth().signOut(); 
+        }
+
+        // Sürükle Bırak
         const dz = document.getElementById('dropZone');
-        const fi = document.getElementById('fileInput');
-        dz.onclick = () => fi.click();
-        dz.ondragover = (e) => { e.preventDefault(); dz.classList.add('over'); };
-        dz.ondragleave = () => dz.classList.remove('over');
-        dz.ondrop = (e) => {
-            e.preventDefault();
-            dz.classList.remove('over');
-            fi.files = e.dataTransfer.files;
-            uploadFile();
-        };
-
-        function uploadFile() {
-            const file = fi.files[0];
-            const user = firebase.auth().currentUser;
-            if(!file) return;
-            document.getElementById('status').innerText = "⏳ Yükleniyor...";
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                const base64 = e.target.result.split(',')[1];
-                fetch(WEB_APP_URL, {
-                    method: "POST",
-                    body: JSON.stringify({ action: "upload", fileName: file.name, mimeType: file.type, base64: base64, userEmail: user.email })
-                }).then(() => {
-                    document.getElementById('status').innerText = "✅ Tamamlandı!";
-                    initDashboard(user);
-                });
-            };
-            reader.readAsDataURL(file);
-        }
-
-        function deleteFile(id) {
-            if(!confirm("Kalıcı olarak silinecek?")) return;
-            fetch(WEB_APP_URL, { method: "POST", body: JSON.stringify({ action: "delete", fileId: id, userEmail: firebase.auth().currentUser.email }) })
-            .then(() => initDashboard(firebase.auth().currentUser));
-        }
-
-        function blockUser(email) {
-            if(!confirm(email + " engellenecek?")) return;
-            fetch(WEB_APP_URL, { method: "POST", body: JSON.stringify({ action: "blockUser", targetEmail: email }) })
-            .then(() => alert("Kullanıcı Engellendi"));
-        }
-
-        function loginWithGoogle() {
-            const provider = new firebase.auth.GoogleAuthProvider();
-            firebase.auth().signInWithPopup(provider).catch(alert);
-        }
-
-        function logout() { firebase.auth().signOut(); }
+        dz.onclick = () => { logAction("BUTON_TIKLANDI", "Dosya seçici açıldı."); document.createElement('input'); /* ... */ };
+        // ... (Upload fonksiyonlarını buraya ekle)
     </script>
 </body>
 </html>
